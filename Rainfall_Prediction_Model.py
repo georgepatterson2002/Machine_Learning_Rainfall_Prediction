@@ -88,8 +88,9 @@ output_text += f"Importance Score: {most_influential_feature['Importance']}\n\n"
 # KFold with 5 splits
 kf = KFold (n_splits=5, shuffle=True, random_state=42)
 
-#Empty list to store accuracies
+#Empty lists to store accuracies and confusion matrices
 accuracies = []
+confusion_matrices = []
 
 #Loop through each fold
 for train_index, val_index in kf.split(X):
@@ -129,11 +130,18 @@ for train_index, val_index in kf.split(X):
     #Calculate accuracy
     accuracy = accuracy_score(y_val, y_pred)
     accuracies.append(accuracy)
+    
+    #Calculate confusion matrix
+    cm = confusion_matrix(y_val, y_pred)
+    confusion_matrices.append(cm)
 
 #Find mean accuracy
 average_accuracy = np.mean(accuracies)
-output_text += f'\n\n--LightGBM 5-Fold Cross-Validation:\nAverage Accuracy: {average_accuracy:.4f}\n\n'
 
+#Aggregate confusion matrices
+overall_cm = np.sum(confusion_matrices, axis=0)
+
+output_text += f'\n\n--LightGBM 5-Fold Cross-Validation:\nAverage Accuracy: {average_accuracy:.4f}\n\nConfusion Matrix:\n{overall_cm}\n\n'
 
 
 # K-NEAREST NEIGHBOR MODEL WITH 5 FOLD CROSS VALIDATION
@@ -141,6 +149,7 @@ output_text += f'\n\n--LightGBM 5-Fold Cross-Validation:\nAverage Accuracy: {ave
 
 kf = KFold(n_splits=5, shuffle=True, random_state= 42)
 accuracies = []
+confusion_matrices = []
 
 n_neighbors = int(math.sqrt(len(X)))
 
@@ -158,8 +167,13 @@ for train_index, val_index in kf.split(X):
     accuracy = accuracy_score(y_val, y_pred)
     accuracies.append(accuracy)
     
+    cm = confusion_matrix(y_val, y_pred)
+    confusion_matrices.append(cm)
+    
 average_accuracy = np.mean(accuracies)
-output_text += f'\n\n--KNN With 5-Fold Cross-Validation:\nAverage Accuracy: {average_accuracy:.4f}\n\n'
+overall_cm = np.sum(confusion_matrices, axis=0)
+
+output_text += f'\n\n--KNN With 5-Fold Cross-Validation:\nAverage Accuracy: {average_accuracy:.4f}\n\nConfusion Matrix:\n{overall_cm}\n\n'
 
 #print(y.value_counts())
 print(output_text)
