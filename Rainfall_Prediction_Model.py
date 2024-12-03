@@ -61,12 +61,25 @@ y_pred = (y_pred_prob >= 0.5).astype(int)
 # Calculate accuracy
 accuracy = accuracy_score(y_test, y_pred)
 
-output_text += f"\n\nInitial LightGBM:\nAccuracy: {accuracy}\n"
+output_text += f"\n\n--Initial LightGBM:\nAccuracy: {accuracy}\n\n"
 
 # Calculate confusion matrix
 cm = confusion_matrix(y_test, y_pred)
 output_text += f"Confusion Matrix:\n{cm}\n\n"
 
+# Find most influential feature (Most gain)
+importance = lgb_model.feature_importance(importance_type='gain')
+feature_names = X.columns
+
+feature_importance_df = pd.DataFrame({
+    'Feature': feature_names,
+    'Importance': importance
+    }).sort_values(by='Importance', ascending = False)
+
+most_influential_feature = feature_importance_df.iloc[0]
+
+output_text += f"Most Influential Feature: {most_influential_feature['Feature']}\n"
+output_text += f"Importance Score: {most_influential_feature['Importance']}\n\n"
 
 
 # K FOLD CROSS-VALIDATION ON LIGHTGBM
@@ -119,7 +132,7 @@ for train_index, val_index in kf.split(X):
 
 #Find mean accuracy
 average_accuracy = np.mean(accuracies)
-output_text += f'\n\nLightGBM 5-Fold Cross-Validation:\nAverage Accuracy: {average_accuracy:.4f}\n\n'
+output_text += f'\n\n--LightGBM 5-Fold Cross-Validation:\nAverage Accuracy: {average_accuracy:.4f}\n\n'
 
 
 
@@ -146,7 +159,7 @@ for train_index, val_index in kf.split(X):
     accuracies.append(accuracy)
     
 average_accuracy = np.mean(accuracies)
-output_text += f'\n\nKNN With 5-Fold Cross-Validation:\nAverage Accuracy: {average_accuracy:.4f}\n\n'
+output_text += f'\n\n--KNN With 5-Fold Cross-Validation:\nAverage Accuracy: {average_accuracy:.4f}\n\n'
 
 print(output_text)
 
