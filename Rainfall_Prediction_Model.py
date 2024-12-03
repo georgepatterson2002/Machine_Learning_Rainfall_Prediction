@@ -161,5 +161,6 @@ for train_index, val_index in kf.split(X):
 average_accuracy = np.mean(accuracies)
 output_text += f'\n\n--KNN With 5-Fold Cross-Validation:\nAverage Accuracy: {average_accuracy:.4f}\n\n'
 
+#print(y.value_counts())
 print(output_text)
 
