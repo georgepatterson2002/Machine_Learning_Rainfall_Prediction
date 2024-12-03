@@ -69,7 +69,7 @@ output_text += f"Confusion Matrix:\n{cm}\n\n"
 
 
 
-# K FOLD CROSS-VALIDATION
+# K FOLD CROSS-VALIDATION ON LIGHTGBM
 
 
 # KFold with 5 splits
@@ -123,7 +123,7 @@ output_text += f'\n\nLightGBM 5-Fold Cross-Validation:\nAverage Accuracy: {avera
 
 
 
-# K-NEAREST NEIGHBOR MODEL
+# K-NEAREST NEIGHBOR MODEL WITH 5 FOLD CROSS VALIDATION
 
 
 kf = KFold(n_splits=5, shuffle=True, random_state= 42)
